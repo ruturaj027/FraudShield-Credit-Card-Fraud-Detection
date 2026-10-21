@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#100b0b">
+  <title>FraudShield | Transaction Intelligence</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      <span class="brand-icon">⬡</span>
+      <span>Fraud<span class="brand-light">Shield</span></span>
+    </a>
+
+    <div class="nav-label">WORKSPACE</div>
+    <a class="nav-item active" href="#overview">▦ &nbsp; Overview</a>
+    <a class="nav-item" href="#analyzer">⌕ &nbsp; Transaction analyzer</a>
+    <a class="nav-item" href="#activity">◷ &nbsp; Activity</a>
+
+    <div class="sidebar-bottom">
+      <div class="security-card">
+        <div class="security-symbol">✳</div>
+        <strong>AI Security Engine</strong>
+        <p>Machine-learning transaction risk assessment.</p>
+        <div class="status-line">
+          <span class="status-dot"></span>
+          <span id="model-status">Checking model...</span>
+        </div>
+      </div>
+
+      <div class="profile">
+        <div class="avatar">FS</div>
+        <div>
+          <strong>Security Analyst</strong>
+          <small>Local workspace</small>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="mobile-brand">⬡ FraudShield</div>
+      <div class="breadcrumb">Workspace <span>/</span> <strong>Overview</strong></div>
+      <div class="topbar-right">
+        <span class="live-dot"></span> Local environment
+        <span class="top-avatar">FS</span>
+      </div>
+    </header>
+
+    <section class="page-heading" id="overview">
+      <div>
+        <div class="eyebrow">TRANSACTION INTELLIGENCE</div>
+        <h1>Security overview<span class="heading-period">.</span></h1>
+        <p>Analyze transaction patterns and estimate fraud risk using machine learning.</p>
+      </div>
+      <a class="primary-button" href="#analyzer">＋ Analyze transaction</a>
+    </section>
+
+    <section class="metrics-grid">
+      <article class="metric-card">
+        <div class="metric-top">Model status <span class="metric-icon purple">✳</span></div>
+        <div class="metric-value" id="metric-model">Checking</div>
+        <div class="metric-foot" id="metric-model-note">Connecting to Flask</div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">Latest risk score <span class="metric-icon orange">⌁</span></div>
+        <div class="metric-value" id="metric-risk">—</div>
+        <div class="metric-foot">Updates after analysis</div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">Transaction amount <span class="metric-icon blue">↗</span></div>
+        <div class="metric-value" id="metric-amount">—</div>
+        <div class="metric-foot">Latest analyzed transaction</div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">Session analyses <span class="metric-icon green">◎</span></div>
+        <div class="metric-value" id="metric-count">0</div>
+        <div class="metric-foot">Current browser session</div>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel analyzer-panel" id="analyzer">
+        <div class="panel-heading">
+          <div>
+            <div class="eyebrow">PREDICTION ENGINE</div>
+            <h2>Transaction analyzer</h2>
+            <p>Enter transaction features for a model prediction.</p>
+          </div>
+          <span class="panel-icon">⌘</span>
+        </div>
+
+        <form id="prediction-form">
+          <div class="field-grid">
+            <label class="field">
+              <span>Transaction amount <i>Required</i></span>
+              <div class="input-wrap">
+                <span class="input-prefix">₹</span>
+                <input id="amount" type="number" min="0" step="any" value="1499" required>
+              </div>
+              <small>Amount in the dataset's currency units.</small>
+            </label>
+
+            <label class="field">
+              <span>Transaction time <i>Required</i></span>
+              <div class="input-wrap">
+                <input id="time" type="number" min="0" step="any" value="0" required>
+                <span class="input-suffix">min</span>
+              </div>
+              <small>Enter minutes. Converted to seconds for the model.</small>
+            </label>
+          </div>
+
+          <details class="advanced-fields">
+            <summary>
+              <span>Advanced model features</span>
+              <span class="summary-note">V1–V28</span>
+            </summary>
+
+            <p class="helper-text">
+              The original credit-card dataset uses PCA-transformed features V1–V28.
+              Enter values from a properly prepared transaction record. Zero values
+              are placeholders, not realistic transaction data.
+            </p>
+
+            <div class="feature-grid" id="feature-grid"></div>
+          </details>
+
+          <div class="notice">
+            <span>ⓘ</span>
+            <p>Predictions are estimates. Review suspicious transactions before taking action.</p>
+          </div>
+
+          <button class="primary-button submit-button" id="analyze-button" type="submit">
+            <span>Run fraud analysis</span>
+            <span>↗</span>
+          </button>
+
+          <p class="form-error" id="form-error" role="alert"></p>
+        </form>
+      </article>
+
+      <article class="panel result-panel">
+        <div class="panel-heading">
+          <div>
+            <div class="eyebrow">MODEL OUTPUT</div>
+            <h2>Risk assessment</h2>
+            <p>Latest transaction prediction</p>
+          </div>
+          <span class="result-live">LIVE</span>
+        </div>
+
+        <div class="result-empty" id="empty-result">
+          <div class="empty-art"><span>⬡</span><i></i><b></b></div>
+          <h3>Ready for analysis</h3>
+          <p>Submit a transaction to view the prediction and risk score.</p>
+        </div>
+
+        <div class="result-content" id="result-content" hidden>
+          <div class="risk-ring" id="risk-ring">
+            <div>
+              <strong id="risk-number">0%</strong>
+              <span>Risk score</span>
+            </div>
+          </div>
+
+          <div class="result-status" id="result-status">Prediction</div>
+          <p class="result-description" id="result-description"></p>
+
+          <div class="result-details">
+            <div><span>Transaction amount</span><strong id="result-amount">—</strong></div>
+            <div><span>Entered time</span><strong id="result-time">—</strong></div>
+            <div><span>Model prediction</span><strong id="result-prediction">—</strong></div>
+            <div><span>Analysis status</span><strong class="text-green">Completed</strong></div>
+          </div>
+
+          <div class="notice result-notice">
+            <span>!</span>
+            <p>The model can produce false positives and false negatives. This score is not a guarantee.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel activity-panel" id="activity">
+      <div class="panel-heading">
+        <div>
+          <div class="eyebrow">SESSION LOG</div>
+          <h2>Recent analyses</h2>
+        </div>
+        <span class="session-tag">This session only</span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>TRANSACTION</th>
+              <th>AMOUNT</th>
+              <th>TIME</th>
+              <th>RISK SCORE</th>
+              <th>PREDICTION</th>
+            </tr>
+          </thead>
+          <tbody id="activity-body">
+            <tr class="empty-row">
+              <td colspan="5">No transactions analyzed yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <span>⬡ FraudShield</span>
+      <span>Machine learning demo · Not a payment processor</span>
+    </footer>
+  </main>
+</div>
+</body>
+</html>
